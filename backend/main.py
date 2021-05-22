@@ -1,12 +1,15 @@
 import uvicorn
 from fastapi import FastAPI
 from routers import router as api_router
+from fastapi.staticfiles import StaticFiles
 from tortoise.contrib.fastapi import register_tortoise
+
 
 
 def init_app():
     app = FastAPI(title="Inventory Workshop")
     app.include_router(api_router)
+    app.mount("/static", StaticFiles(directory="static"), name="static")
     return app
 
 app = init_app()
