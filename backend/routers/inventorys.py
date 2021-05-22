@@ -1,6 +1,9 @@
 import os, shutil
-from fastapi import APIRouter, UploadFile, File, Form
+from fastapi import APIRouter, UploadFile, File, Form, HTTPException
 from models.inventory import InventPydantic, InventPydanticIn, Inventory
+from models.utils import Status
+
+from tortoise.contrib.fastapi import HTTPNotFoundError
 
 BASE_PATH = os.path.abspath(os.curdir)
 STATIC_DIR = os.path.join(BASE_PATH, 'static')
@@ -22,9 +25,9 @@ async def all_inventory():
     return await InventPydantic.from_queryset(Inventory.all())
 
 
-@router.get("/item/{id}")
-async def get_by_id(id: int):
-    return { 'id': id }
+@router.get("/item/{item_id}", response_model=InventPydantic)
+async def get_by_id(item_id: int):
+    return await InventPydantic.from_queryset_single(Inventory.get(id=item_id))
 
 
 @router.post('/item')
@@ -46,12 +49,18 @@ async def create_inventory(
     return await InventPydantic.from_tortoise_orm(Inventory_obj)
 
 
-@router.put("/item/{id}")
+@router.put("/item/{item_id}")
 async def update_inventory(id: int):
+
     return { 'id': id }
 
 
-@router.delete("/item/{id}")
+@router.delete(
+    "/item/{id}", response_model=Status, responses={404: {'model': HTTPNotFoundError}}
+)
 async def delete_inventory(id: int):
-    return { 'id': id }
+    delete_count = await Inventory.filter(id=id).delete()
+    if not delete_count:
+        raise HTTPException(status_code=404, detail=f'Item {id} not found')
+    return Status(message=f'Delete item {id}')
 

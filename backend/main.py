@@ -17,7 +17,7 @@ app = init_app()
 
 @app.get("/")
 async def root():
-    return {"message": "Hello Bigger Applications!"}
+    return {"message": "Hello Welcome to Inventory Workshop"}
 
 
 register_tortoise(
