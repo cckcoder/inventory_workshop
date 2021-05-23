@@ -2,14 +2,24 @@ import uvicorn
 from fastapi import FastAPI
 from routers import router as api_router
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 from tortoise.contrib.fastapi import register_tortoise
 
-
+origins = [
+    'http://localhost:8080'
+]
 
 def init_app():
     app = FastAPI(title="Inventory Workshop")
     app.include_router(api_router)
     app.mount("/static", StaticFiles(directory="static"), name="static")
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
     return app
 
 app = init_app()
