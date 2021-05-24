@@ -1,16 +1,21 @@
 <template>
-  <h1>Hello Inventor Workshop</h1>
-  <p>test</p>
+ <div class="container mt-4">
+        <div class="columns">
+            <TheSideBar />
+            <BoardInfo />
+        </div>
+    </div>
 </template>
 
 <script>
+import TheSideBar from '@/components/core/TheSideBar'
+import BoardInfo from '@/components/core/BoardInfo'
+
 export default {
-  mounted() {
-    this.$store.dispatch('fetchInventory')
-  },
-
-
-
+    components: {
+        TheSideBar,
+        BoardInfo
+    }
 }
 </script>
 
