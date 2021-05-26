@@ -21,3 +21,4 @@
 - https://fastapi.tiangolo.com/tutorial/static-files/
 - https://github.com/tiangolo/fastapi/issues/2037
 - https://fastapi.tiangolo.com/tutorial/bigger-applications/
+- https://www.codegrepper.com/code-examples/html/fontawesome.com%2Fv4.7.0%2F+cdn
