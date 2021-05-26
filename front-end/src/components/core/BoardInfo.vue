@@ -49,6 +49,15 @@
           </div>
       </section>
 
+      <div class="columns mt-4">
+          <div class="column is-3 is-offset-9">
+              <button @click="$router.push({ name: 'CreateInventory' })"
+                  class="button is-primary is-fullwidth">
+                  <i class="fa fa-plus-circle mr-1" aria-hidden="true"></i>
+                  Create inventory
+              </button>
+          </div>
+      </div>
       <div class="columns">
           <div class="column is-full">
             <table class="table is-striped is-fullwidth">
@@ -66,6 +75,18 @@
                     <td>{{ item.name }}</td>
                     <td>{{ item.price }}</td>
                     <td>{{ item.stock }}</td>
+                    <td class="has-text-centered">
+                        <div class="buttons is-inline-block">
+                            <button class="button is-warning" @click="editItem(item.id)">
+                                <i class="fa fa-pencil-square-o mr-1"></i>
+                                Edit
+                            </button>
+                            <button class="button is-danger">
+                                <i class="fa fa-times mr-1"></i>
+                                Delete
+                            </button>
+                        </div>
+                    </td>
                 </tr>
             </tbody>
             </table>
@@ -90,9 +111,9 @@ export default {
     mounted() {
         this.$store.dispatch('fetchInventory')
     },
-    filters: {
-        getImage(image_name) {
-            return `http://localhost:8000/static/image/${image_name}`
+    methods: {
+        editItem(id) {
+           console.log(id)
         }
     },
     computed:mapState(['inventory'])
