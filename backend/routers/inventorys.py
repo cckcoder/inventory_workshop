@@ -10,10 +10,10 @@ from tortoise.contrib.fastapi import HTTPNotFoundError
 BASE_PATH = os.path.abspath(os.curdir)
 STATIC_DIR = os.path.join(BASE_PATH, 'static')
 
-async def save_file(image_name):
-    with open(f'{STATIC_DIR}/images/{image_name.filename}', 'wb') as buffer:
+async def save_file(picture):
+    with open(f'{STATIC_DIR}/images/{picture.filename}', 'wb') as buffer:
         try:
-            shutil.copyfileobj(image_name.file, buffer)
+            shutil.copyfileobj(picture.file, buffer)
         except Exception as e:
             print(e)
         else:
@@ -38,17 +38,17 @@ async def create_inventory(
     name: str = Form(...),
     price: float = Form(...),
     stock: int = Form(...),
-    image_name: UploadFile = File(...)
+    image_name: str = Form(...),
+    picture: UploadFile = File(...)
 ):
-
     Inventory_obj = await Inventory(
         name=name,
-        image_name=image_name.filename,
+        image_name=image_name,
         price=price,
         stock=stock
     )
     await Inventory_obj.save()
-    await save_file(image_name)
+    await save_file(picture)
     return await InventPydantic.from_tortoise_orm(Inventory_obj)
 
 

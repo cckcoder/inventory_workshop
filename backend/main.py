@@ -7,6 +7,7 @@ from tortoise.contrib.fastapi import register_tortoise
 
 origins = [
     'http://localhost:8080'
+    ,'http://localhost:8081'
 ]
 
 def init_app():
