@@ -8,5 +8,9 @@ const apiClient = axios.create({
 export default {
   getInventory() {
     return apiClient.get('/inventory')
+  },
+  postInventory(inventory) {
+    console.log(inventory)
+    return apiClient.post('/inventory/item', inventory)
   }
 }

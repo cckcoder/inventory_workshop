@@ -6,8 +6,13 @@ export default createStore({
     inventory: []
   },
   mutations: {
-    SET_INVENTORY(state, event) {
-      state.inventory = event
+    SET_INVENTORY(state, inventory) {
+      state.inventory = inventory
+    },
+    ADD_INVENTORY(state, inventory) {
+      console.log(state + '\n')
+      console.log(inventory)
+      //state.inventory.push(inventory)
     }
   },
   actions: {
@@ -17,6 +22,10 @@ export default createStore({
           console.log(response.data)
           commit('SET_INVENTORY', response.data)
         })
+    },
+    createInventory({ commit }, inventory) {
+      InventoryService.postInventory(inventory)
+      commit('ADD_INVENTORY', inventory)
     }
 
   },

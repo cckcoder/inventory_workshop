@@ -34,21 +34,16 @@ async def get_by_id(item_id: int):
 
 
 @router.post('/item')
-async def create_inventory(
-    name: str = Form(...),
-    price: float = Form(...),
-    stock: int = Form(...),
-    image_name: str = Form(...),
-    picture: UploadFile = File(...)
-):
+async def create_inventory(request: Request):
+    form_data = await request.form()
     Inventory_obj = await Inventory(
-        name=name,
-        image_name=image_name,
-        price=price,
-        stock=stock
+        name = form_data.get('name'),
+        image_name = form_data.get('image_name'),
+        price = form_data.get('price'),
+        stock = form_data.get('stock')
     )
     await Inventory_obj.save()
-    await save_file(picture)
+    await save_file(form_data.get('picture'))
     return await InventPydantic.from_tortoise_orm(Inventory_obj)
 
 

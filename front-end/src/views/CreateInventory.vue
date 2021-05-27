@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <section class="section">
-      <form @submit.prevent>
+      <form @submit.prevent="handleSubmitForm">
         <div class="columns">
           <div class="column is-half is-offset-one-quarter">
             <h1 class="title">
@@ -13,24 +13,28 @@
             <div class="field">
               <label class="label" for="Name">Name: </label>
               <div class="control">
-                <input class="input" type="text" placeholder="Item name...">
+                <input v-model="inventory.name"
+                  class="input" type="text" placeholder="Item name...">
               </div>
             </div>
             <div class="field">
               <label class="label" for="Name">Price: </label>
               <div class="control">
-                <input class="input" type="number" placeholder="Item Price...">
+                <input v-model.number="inventory.price"
+                  class="input" type="number" placeholder="Item Price...">
               </div>
             </div>
             <div class="field">
               <label class="label" for="Name">Stock Qty: </label>
               <div class="control">
-                <input class="input" type="number" placeholder="Item Stock Qty...">
+                <input v-model.number="inventory.stock"
+                  class="input" type="number" placeholder="Item Stock Qty...">
               </div>
             </div>
-            <div class="file is-boxed">
+            <div class="file">
               <label class="file-label">
-                <input class="file-input" type="file" name="resume">
+                <input @change="handleFileSelect"
+                  class="file-input" type="file" name="resume">
                 <span class="file-cta">
                   <span class="file-icon">
                     <i class="fa fa-upload"></i>
@@ -41,6 +45,11 @@
                 </span>
               </label>
             </div>
+
+            <div v-if="imageURL" class="section is-boxed">
+              <img :src="imageURL" alt="" class="image">
+            </div>
+
             <div class="columns mt-2">
               <div class="column">
                 <div class="control">
@@ -54,4 +63,47 @@
       </form>
     </section>
   </div>
+  {{ inventory }}
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      inventory: {
+        name: '',
+        price: '',
+        stock: '',
+        image_name: '',
+        picture: '',
+      },
+      imageURL: ''
+    }
+  },
+  methods: {
+    handleFileSelect(event) {
+      const reader = new FileReader();
+      // For Preview
+      reader.onload = event => {
+        this.imageURL = event.target.result;
+      };
+      reader.readAsDataURL(event.target.files[0]);
+
+      // For upload
+      this.inventory.picture = event.target.files[0];
+      this.inventory.image_name = event.target.files[0]['name']
+    },
+    handleSubmitForm() {
+      let formData = new FormData()
+      const { name, price, stock } = this.inventory
+      formData.append("name", name)
+      formData.append("price", price)
+      formData.append("stock", stock)
+      formData.append("image_name", this.inventory.image_name)
+      formData.append("picture", this.inventory.picture)
+
+      this.$store.dispatch('createInventory', formData)
+    }
+  }
+}
+</script>
