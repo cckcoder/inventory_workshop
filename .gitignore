@@ -10,7 +10,8 @@ __pycache__/
 version-name/
 # C extensions
 *.so
-
+*/*.sqlite3-shm
+*/*.sqlite3-wal
 # Distribution / packaging
 .Python
 build/
