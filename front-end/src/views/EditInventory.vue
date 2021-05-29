@@ -5,29 +5,29 @@
         <div class="columns">
           <div class="column is-half is-offset-one-quarter">
             <h1 class="title">
-              Create Inventory
+              Edit Inventory
               <span class="icon has-text-info ml-2">
                 <i class="fa fa-cubes" aria-hidden="true"></i>
               </span>
             </h1>
             <div class="field">
-              <label class="label" for="Name">Name: </label>
+              <label class="label">Name: </label>
               <div class="control">
-                <input v-model="inventory.name"
+                <input v-model="itemInventory.name"
                   class="input" type="text" placeholder="Item name...">
               </div>
             </div>
             <div class="field">
-              <label class="label" for="Name">Price: </label>
+              <label class="label">Price: </label>
               <div class="control">
-                <input v-model.number="inventory.price"
+                <input v-model.number="itemInventory.price"
                   class="input" type="number" placeholder="Item Price...">
               </div>
             </div>
             <div class="field">
-              <label class="label" for="Name">Stock Qty: </label>
+              <label class="label">Stock Qty: </label>
               <div class="control">
-                <input v-model.number="inventory.stock"
+                <input v-model.number="itemInventory.stock"
                   class="input" type="number" placeholder="Item Stock Qty...">
               </div>
             </div>
@@ -46,8 +46,8 @@
               </label>
             </div>
 
-            <div v-if="imageURL" class="section is-boxed">
-              <img :src="imageURL" alt="" class="image">
+            <div v-if="itemImage" class="section is-boxed">
+              <img :src="itemImage" alt="" class="image">
             </div>
 
             <div class="columns mt-2">
@@ -66,17 +66,17 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
+  props: ['id'],
+  created() {
+    this.$store.dispatch('fetchInventoryById', this.id)
+  },
   data() {
     return {
-      inventory: {
-        name: '',
-        price: '',
-        stock: '',
-        image_name: '',
-        picture: '',
-      },
-      imageURL: ''
+      imageSize: 0,
+      imagePreview: '',
     }
   },
   methods: {
@@ -84,26 +84,38 @@ export default {
       const reader = new FileReader();
       // For Preview
       reader.onload = event => {
-        this.imageURL = event.target.result;
+        this.imagePreview = event.target.result
       };
-      reader.readAsDataURL(event.target.files[0]);
-
+      reader.readAsDataURL(event.target.files[0])
+      this.imageSize = event.target.files[0].size
       // For upload
-      this.inventory.picture = event.target.files[0];
-      this.inventory.image_name = event.target.files[0]['name']
+      this.itemInventory.picture = event.target.files[0];
+      this.itemInventory.image_name = event.target.files[0]['name']
     },
     handleSubmitForm() {
       let formData = new FormData()
-      const { name, price, stock } = this.inventory
+      const { name, price, stock, picture, image_name } = this.itemInventory
       formData.append("name", name)
       formData.append("price", price)
       formData.append("stock", stock)
-      formData.append("image_name", this.inventory.image_name)
-      formData.append("picture", this.inventory.picture)
+      formData.append("image_name", image_name)
+      formData.append("picture", (! picture) ? 0 : picture)
 
-      this.$store.dispatch('createInventory', formData)
+      this.$store.dispatch('updateInventory', { id: this.id, formData: formData })
       this.$router.back()
     }
+
+  },
+  computed: {
+    itemImage() {
+      if (this.imageSize > 100) {
+        return this.imagePreview
+      } else {
+        return `http://localhost:8000/static/images/${this.itemInventory.image_name}`
+      }
+    },
+    ...mapState(['itemInventory'])
   }
+
 }
 </script>

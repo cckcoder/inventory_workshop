@@ -9,8 +9,16 @@ export default {
   getInventory() {
     return apiClient.get('/inventory')
   },
+  getInventoryById(id) {
+    return apiClient.get(`/inventory/item/${id}`)
+  },
   postInventory(inventory) {
-    console.log(inventory)
     return apiClient.post('/inventory/item', inventory)
+  },
+  putInventory(id, inventory) {
+    return apiClient.put(`/inventory/item/${id}`, inventory)
+  },
+  deleteInventory(id) {
+    return apiClient.delete(`/inventory/item/${id}`)
   }
 }

@@ -3,6 +3,7 @@
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
+.idea
 static/
 __pycache__/
 *.py[cod]

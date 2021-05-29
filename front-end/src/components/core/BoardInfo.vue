@@ -77,11 +77,14 @@
                     <td>{{ item.stock }}</td>
                     <td class="has-text-centered">
                         <div class="buttons is-inline-block">
-                            <button class="button is-warning" @click="editItem(item.id)">
-                                <i class="fa fa-pencil-square-o mr-1"></i>
-                                Edit
+                            <button class="button is-warning mr-3">
+                                <router-link :to="{ name: 'EditInventory', params: { id: item.id} }">
+                                    <i class="fa fa-pencil-square-o mr-1"></i>
+                                    Edit
+                                </router-link>
                             </button>
-                            <button class="button is-danger">
+                            <button @click="deleteItem(item.id)"
+                                class="button is-danger">
                                 <i class="fa fa-times mr-1"></i>
                                 Delete
                             </button>
@@ -108,15 +111,26 @@ export default {
     components: {
         ImageBase
     },
-    mounted() {
+    created() {
         this.$store.dispatch('fetchInventory')
     },
     methods: {
-        editItem(id) {
-           console.log(id)
-        }
+      deleteItem(id) {
+        this.$store.dispatch('deleteInventory', id)
+      }
     },
-    computed:mapState(['inventory'])
+    computed: mapState(['inventory'])
 
 }
 </script>
+
+<style scoped>
+a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+a:hover {
+    cursor: pointer;
+}
+</style>

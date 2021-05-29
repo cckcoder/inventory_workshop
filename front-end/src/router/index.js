@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import DashBoard from '@/views/DashBoard'
 import CreateInventory from '@/views/CreateInventory'
+import EditInventory from '@/views/EditInventory'
 
 const routes = [
   {
@@ -12,6 +13,12 @@ const routes = [
     path: '/create-inventory',
     name: 'CreateInventory',
     component: CreateInventory
+  },
+  {
+    path: '/edit-inventory',
+    name: 'EditInventory',
+    component: EditInventory,
+    props: true
   },
   {
     path: '/about',
