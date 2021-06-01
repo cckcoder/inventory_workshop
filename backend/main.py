@@ -36,7 +36,7 @@ async def root():
 register_tortoise(
     app,
     db_url='sqlite://db.sqlite3',
-    modules={'models': ['models.inventory']},
+    modules={'models': ['models.inventory', 'models.user']},
     generate_schemas=True,
     add_exception_handlers=True
 )

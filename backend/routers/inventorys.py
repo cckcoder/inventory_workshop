@@ -1,7 +1,8 @@
-import os, shutil
+import os, shutil, sys
 from starlette.requests import Request
-from fastapi import APIRouter, UploadFile, File, Form, HTTPException
-from models.inventory import InventPydantic, InventPydanticIn, Inventory
+from fastapi import APIRouter, HTTPException
+sys.path.append('..')
+from models.inventory import InventPydantic, Inventory
 from models.utils import Status
 
 
@@ -37,15 +38,15 @@ async def get_by_id(item_id: int):
 @router.post('/item')
 async def create_inventory(request: Request):
     form_data = await request.form()
-    Inventory_obj = await Inventory(
+    inventory_obj = await Inventory(
         name=form_data.get('name'),
         image_name=form_data.get('image_name'),
         price=form_data.get('price'),
         stock=form_data.get('stock')
     )
-    await Inventory_obj.save()
+    await inventory_obj.save()
     await save_file(form_data.get('picture'))
-    return await InventPydantic.from_tortoise_orm(Inventory_obj)
+    return await InventPydantic.from_tortoise_orm(inventory_obj)
 
 
 async def check_image_exist(picture):
