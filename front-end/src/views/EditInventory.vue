@@ -111,7 +111,7 @@ export default {
       if (this.imageSize > 100) {
         return this.imagePreview
       } else {
-        return `http://localhost:8000/static/images/${this.itemInventory.image_name}`
+        return `http://localhost:8001/static/images/${this.itemInventory.image_name}`
       }
     },
     ...mapState(['itemInventory'])

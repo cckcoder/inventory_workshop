@@ -1,24 +1,23 @@
-import axios from 'axios'
+import ApiClient from '@/services/ApiClient.js'
 
-const apiClient = axios.create({
-  baseURL: 'http://localhost:8000/',
-})
-
+let user = (localStorage.getItem('user')) ? JSON.parse(localStorage.getItem('user')) : null
 
 export default {
   getInventory() {
-    return apiClient.get('/inventory')
+    return ApiClient.get('/inventory', {
+      headers: { Authorization: `Bearer ${user.access_token}` }
+    })
   },
   getInventoryById(id) {
-    return apiClient.get(`/inventory/item/${id}`)
+    return ApiClient.get(`/inventory/item/${id}`)
   },
   postInventory(inventory) {
-    return apiClient.post('/inventory/item', inventory)
+    return ApiClient.post('/inventory/item', inventory)
   },
   putInventory(id, inventory) {
-    return apiClient.put(`/inventory/item/${id}`, inventory)
+    return ApiClient.put(`/inventory/item/${id}`, inventory)
   },
   deleteInventory(id) {
-    return apiClient.delete(`/inventory/item/${id}`)
+    return ApiClient.delete(`/inventory/item/${id}`)
   }
 }

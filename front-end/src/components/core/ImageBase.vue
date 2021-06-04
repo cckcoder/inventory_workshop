@@ -14,7 +14,7 @@ export default {
   },
     computed: {
         getImage() {
-            return `http://localhost:8000/static/images/${this.image_name}`
+            return `http://localhost:8001/static/images/${this.image_name}`
         }
     }
 }

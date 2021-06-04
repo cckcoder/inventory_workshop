@@ -15,7 +15,7 @@
                 <router-link to="/my-account" class="button is-light">My account</router-link>
             </template>
             <template v-else>
-                <router-link to="/log-in" class="button is-light">Log in</router-link>
+                <router-link :to="{ name: 'Login' }" class="button is-light">Log in</router-link>
             </template>
             </div>
           </div>

@@ -1,10 +1,12 @@
 import { createStore } from 'vuex'
 import InventoryService from '@/services/InventoryService.js'
+import UserService from '@/services/UserService.js'
 
 export default createStore({
   state: {
     inventory: [],
     itemInventory: {},
+    user: null
   },
   mutations: {
     SET_INVENTORY(state, inventory) {
@@ -23,6 +25,10 @@ export default createStore({
     },
     DEL_INVENTORY(state, id) {
       state.inventory = state.inventory.filter(item => item.id !== id)
+    },
+    SET_USER_DATA(state, userData) {
+      state.user = userData
+      localStorage.setItem('user', JSON.stringify(userData))
     }
   },
   actions: {
@@ -66,10 +72,19 @@ export default createStore({
         .catch(error => {
           console.log(error)
         })
+    },
+    login({ commit }, credentials) {
+      UserService.getLogin(credentials)
+        .then(({ data }) => {
+          commit('SET_USER_DATA', data)
+      })
     }
 
   },
   getters: {
+    loggedIn(state) {
+      return !!state.user
+    }
   },
   modules: {
   }

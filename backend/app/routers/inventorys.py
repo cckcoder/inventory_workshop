@@ -1,15 +1,17 @@
-import os, shutil, sys
+import os, shutil
 from starlette.requests import Request
-from fastapi import APIRouter, HTTPException
-sys.path.append('..')
-from models.inventory import InventPydantic, Inventory
-from models.utils import Status
+from fastapi import APIRouter, HTTPException, Depends
+
+from app.auth.auth_bearer import JwtBearer
+
+from app.models.inventory import InventPydantic, Inventory
+from app.models.utils import Status
 
 
 from tortoise.contrib.fastapi import HTTPNotFoundError
 
 BASE_PATH = os.path.abspath(os.curdir)
-STATIC_DIR = os.path.join(BASE_PATH, 'static')
+STATIC_DIR = os.path.join(BASE_PATH, 'app/static')
 
 
 async def save_file(picture):
@@ -25,7 +27,7 @@ async def save_file(picture):
 router = APIRouter()
 
 
-@router.get("/")
+@router.get("/", dependencies=[Depends(JwtBearer())])
 async def all_inventory():
     return await InventPydantic.from_queryset(Inventory.all().order_by('-id'))
 
