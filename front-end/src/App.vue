@@ -1,15 +1,27 @@
 <template>
-  <NavBar />
-  <router-view/>
+  <div>
+    <NavBar />
+    <div class="container mt-6">
+      <div class="columns">
+        <TheSideBar v-show="loggedIn" />
+        <router-view/>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 import NavBar from '@/components/core/NavBar'
+import TheSideBar from '@/components/core/TheSideBar'
+import { authComputed } from '@/store/helper'
 
 export default {
   components: {
-    NavBar
-  } 
+    NavBar,
+    TheSideBar
+  },
+  computed: {
+    ...authComputed
+  }
 }
 </script>
-<style></style>

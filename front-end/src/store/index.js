@@ -1,6 +1,7 @@
 import { createStore } from 'vuex'
 import InventoryService from '@/services/InventoryService.js'
 import UserService from '@/services/UserService.js'
+import ApiClient from '@/services/ApiClient.js'
 
 export default createStore({
   state: {
@@ -16,9 +17,7 @@ export default createStore({
       state.itemInventory = itemInventory
     },
     ADD_INVENTORY(state, inventory) {
-      console.log(state + '\n')
-      console.log(inventory)
-      //state.inventory.push(inventory)
+      state.inventory.push(inventory)
     },
     UPDATE_ITEM_INVENTORY(state, itemInventory) {
       state.itemInventory = itemInventory
@@ -29,11 +28,17 @@ export default createStore({
     SET_USER_DATA(state, userData) {
       state.user = userData
       localStorage.setItem('user', JSON.stringify(userData))
+      ApiClient.defaults.headers.common['Authorization'] = `Bearer ${userData.access_token}`
+    },
+    CLEAR_USER_DATA() {
+      localStorage.removeItem('user')
+      location.reload()
     }
   },
   actions: {
     fetchInventory({ commit }) {
-      InventoryService.getInventory()
+      return InventoryService
+        .getInventory()
         .then(response => {
           commit('SET_INVENTORY', response.data)
         })
@@ -74,16 +79,24 @@ export default createStore({
         })
     },
     login({ commit }, credentials) {
-      UserService.getLogin(credentials)
+      return UserService
+        .getLogin(credentials)
         .then(({ data }) => {
           commit('SET_USER_DATA', data)
-      })
+        })
+    },
+    logout({ commit }) {
+      commit('CLEAR_USER_DATA')
     }
 
   },
   getters: {
     loggedIn(state) {
       return !!state.user
+    },
+    showUser() {
+      let user = JSON.parse(localStorage.getItem('user'))
+      return user.username
     }
   },
   modules: {

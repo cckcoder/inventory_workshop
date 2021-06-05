@@ -9,15 +9,17 @@
 
       <div class="navbar-menu" id="navbar-menu">
         <div class="navbar-end">
-          <div class="navbar-item">
-            <div class="buttons">
-            <template v-if="$store.state.isAuthenticated">
-                <router-link to="/my-account" class="button is-light">My account</router-link>
-            </template>
-            <template v-else>
-                <router-link :to="{ name: 'Login' }" class="button is-light">Log in</router-link>
-            </template>
-            </div>
+          <div class="navbar-item" v-show="loggedIn">
+            <router-link v-if="!loggedIn"
+              :to="{ name: 'Login' }"
+              class="button">
+              Login
+            </router-link>
+            <button v-else
+              @click="logout"
+              class="button">
+              Logout
+            </button>
           </div>
         </div>
       </div>
@@ -26,8 +28,18 @@
 </template>
 
 <script>
-export default {
+import { authComputed } from '@/store/helper'
 
+export default {
+  name: 'NavBar',
+  methods: {
+    logout() {
+      this.$store.dispatch('logout')
+    }
+  },
+  computed: {
+    ...authComputed
+  }
 }
 </script>
 

@@ -3,12 +3,20 @@ import DashBoard from '@/views/DashBoard'
 import CreateInventory from '@/views/CreateInventory'
 import EditInventory from '@/views/EditInventory'
 import Login from '@/views/Login'
+import Report from '@/views/Report'
 
 const routes = [
   {
     path: '/dash-board',
     name: 'DashBoard',
-    component: DashBoard
+    component: DashBoard,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/report',
+    name: 'Report',
+    component: Report,
+    meta: { requiresAuth: true }
   },
   {
     path: '/',
@@ -18,13 +26,15 @@ const routes = [
   {
     path: '/create-inventory',
     name: 'CreateInventory',
-    component: CreateInventory
+    component: CreateInventory,
+    meta: { requiresAuth: true }
   },
   {
     path: '/edit-inventory',
     name: 'EditInventory',
     component: EditInventory,
-    props: true
+    props: true,
+    meta: { requiresAuth: true }
   },
   {
     path: '/about',
@@ -39,6 +49,16 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  const loggedIn = localStorage.getItem('user')
+
+  if (to.matched.some(record => record.meta.requiresAuth) && !loggedIn) {
+    next({ name: 'Login' })
+  }
+
+  next()
 })
 
 export default router

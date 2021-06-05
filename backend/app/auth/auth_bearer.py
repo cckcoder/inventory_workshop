@@ -22,8 +22,9 @@ class JwtBearer(SecurityBase):
 
     async def __call__(self, request: Request):
         authorization: str = request.headers.get('Authorization')
+        scheme, token = get_authorization_scheme_param(authorization)
+
         if authorization:
-            scheme, token = get_authorization_scheme_param(authorization)
             if scheme == 'Bearer':
                 if verify_jwt(token) is False:
                     raise HTTPException(

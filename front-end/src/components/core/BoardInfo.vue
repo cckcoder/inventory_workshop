@@ -1,18 +1,10 @@
 <template>
   <div class="column is-9">
-      <nav class="breadcrumb" aria-label="breadcrumbs">
-          <ul>
-              <li><a href="../">Bulma</a></li>
-              <li><a href="../">Templates</a></li>
-              <li><a href="../">Examples</a></li>
-              <li class="is-active"><a href="#" aria-current="page">Admin</a></li>
-          </ul>
-      </nav>
       <section class="hero is-info welcome is-small">
           <div class="hero-body">
               <div class="container">
                   <h1 class="title">
-                      Hello, Admin.
+                      Hello, {{ showUser }}
                   </h1>
                   <h2 class="subtitle">
                       I hope you are having a great day!
@@ -100,26 +92,30 @@
 
 <script>
 import { mapState } from 'vuex'
+import { userComputed } from '@/store/helper'
 import ImageBase from '@/components/core/ImageBase'
 
 export default {
-    data() {
-        return {
-            columnsHeader: ['ID', 'image', 'name', 'price', 'stock', 'Activity']
-        }
-    },
-    components: {
-        ImageBase
-    },
-    created() {
-        this.$store.dispatch('fetchInventory')
-    },
-    methods: {
-      deleteItem(id) {
-        this.$store.dispatch('deleteInventory', id)
+  data() {
+      return {
+          columnsHeader: ['ID', 'image', 'name', 'price', 'stock', 'Activity']
       }
-    },
-    computed: mapState(['inventory'])
+  },
+  components: {
+      ImageBase
+  },
+  created() {
+      this.$store .dispatch('fetchInventory')
+  },
+  methods: {
+    deleteItem(id) {
+      this.$store.dispatch('deleteInventory', id)
+    }
+  },
+  computed: {
+    ...userComputed,
+    ...mapState(['inventory'])
+  }
 
 }
 </script>

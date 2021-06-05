@@ -3,7 +3,10 @@
         <div class="columns is-centered">
             <div class="is-full">
               <form @submit.prevent="submitLogin">
-                <h1 class="has-text-centered">Login</h1>
+                <h1 class="is-size-1 has-text-centered mb-3">
+                  Login
+                  <i class="fa fa-sign-in"></i>
+                </h1>
                 <div class="field">
                   <label class="label">Username</label>
                   <div class="control">

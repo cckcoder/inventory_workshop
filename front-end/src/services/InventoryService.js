@@ -1,12 +1,9 @@
 import ApiClient from '@/services/ApiClient.js'
 
-let user = (localStorage.getItem('user')) ? JSON.parse(localStorage.getItem('user')) : null
 
 export default {
   getInventory() {
-    return ApiClient.get('/inventory', {
-      headers: { Authorization: `Bearer ${user.access_token}` }
-    })
+    return ApiClient.get('/inventory')
   },
   getInventoryById(id) {
     return ApiClient.get(`/inventory/item/${id}`)
