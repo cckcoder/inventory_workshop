@@ -3,7 +3,7 @@
     <NavBar />
     <div class="container mt-6">
       <div class="columns">
-        <TheSideBar v-show="loggedIn" />
+        <TheSideBar v-if="loggedIn" />
         <router-view/>
       </div>
     </div>

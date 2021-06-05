@@ -1,16 +1,14 @@
-from app.models.user import UserPydantic, UserInPydantic, User
-from app.auth.auth_bearer import JwtBearer
+from app.models.user import UserPydantic,  User, get_password_hash
 from app.auth.auth_handler import sign_jwt
 
-from fastapi import APIRouter, Depends, HTTPException, status, Depends, Request
-
+from fastapi import APIRouter,  HTTPException, status, Request
 
 router = APIRouter()
 
 
 async def authenticate_user(username: str, password: str):
-    user = await User.get(username=username)
-    if not user:
+    user = await User.get_or_none(username=username)
+    if user is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail='Invalid username or password'
@@ -44,13 +42,22 @@ async def generate_token(request: Request):
     return sign_jwt(user.username)
 
 
+@router.post('/register')
+async def create_user(request: Request):
+    form_data = await request.form()
+    username = form_data.get('username')
+    is_exist = await User.filter(username=username).count()
 
-@router.post('/register', response_model=UserPydantic)
-async def create_user(user: UserInPydantic):
+    if is_exist:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail='Duplicate username'
+        )
+
     user_obj = await User(
-        username=user.username,
-        password_hash= User.get_password_hash(user.password_hash)
+        username=form_data.get('username'),
+        password_hash=get_password_hash(form_data.get('password'))
     )
 
     await user_obj.save()
-    return await UserPydantic.from_tortoise_orm(user_obj)
+    return sign_jwt(form_data.get('username'))

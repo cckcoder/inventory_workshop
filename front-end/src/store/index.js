@@ -85,6 +85,13 @@ export default createStore({
           commit('SET_USER_DATA', data)
         })
     },
+    register({ commit }, credentials) {
+      return UserService
+        .getRegister(credentials)
+        .then(({ data }) => {
+          commit('SET_USER_DATA', data)
+        })
+    },
     logout({ commit }) {
       commit('CLEAR_USER_DATA')
     }

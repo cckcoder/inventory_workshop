@@ -6,6 +6,11 @@ from passlib.context import CryptContext
 
 pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 
+
+def get_password_hash(password):
+    return pwd_context.hash(password)
+
+
 class User(Model):
     id = fields.IntField(pk=True)
     username = fields.CharField(50, unique=True)
@@ -15,12 +20,7 @@ class User(Model):
         return pwd_context.verify(password, self.password_hash)
 
 
-    def get_password_hash(self, password):
-        return pwd_context.hash(password)
-
-
 UserPydantic = pydantic_model_creator(User, name='User')
 UserInPydantic = pydantic_model_creator(
     User, name='UserIn', exclude_readonly=True
 )
-

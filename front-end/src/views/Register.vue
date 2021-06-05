@@ -2,10 +2,10 @@
     <div class="container">
         <div class="columns is-centered">
             <div class="is-full">
-              <form @submit.prevent="submitLogin">
+              <form @submit.prevent="submitRegister">
                 <h1 class="is-size-1 has-text-centered mb-3">
-                  Login
-                  <i class="fa fa-sign-in"></i>
+                  Register
+                  <i class="fa fa-id-card"></i>
                 </h1>
                 <div class="field">
                   <label class="label">Username</label>
@@ -23,16 +23,16 @@
                 </div>
                 <div class="field is-grouped">
                   <div class="control">
-                    <button class="button is-link">Login</button>
+                    <button class="button is-link">Register</button>
                   </div>
                   <div class="control">
                     <button class="button is-danger is-light">Cancel</button>
                   </div>
                 </div>
+                <router-link :to="{ name: 'Login' }">
+                    Already have an account? Login.
+                  </router-link>
                 <p class="has-text-danger	">{{ error }}</p>
-                <router-link to="/register">
-                  *Don't have an account? Register.
-                </router-link>
               </form>
             </div>
         </div>
@@ -49,22 +49,23 @@ export default {
     }
   },
   methods: {
-    submitLogin () {
+    submitRegister () {
       let formData = new FormData()
 
       formData.append('username', this.username)
       formData.append('password', this.password)
       this.$store
-        .dispatch('login', formData)
-        .then(() => {
-          this.$router.push({ name: 'DashBoard' })
-        })
-        .catch(error => {
-          this.error = error.response.data.detail
-        })
+          .dispatch('register', formData)
+          .then(() => {
+            this.$router.push({ name: 'DashBoard' })
+          })
+          .catch(error => {
+            console.log(error.response)
+            this.error = error.response.data.detail
+          })
     }
-  }
 
+  }
 }
 </script>
 
